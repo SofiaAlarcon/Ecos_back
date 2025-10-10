@@ -104,10 +104,11 @@ public class AuthControlador {
     @Operation(summary = "Registro", description = "Permite el registro de usuarios nuevos, gerando el JWT correspondiente y devolviéndolo")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Operación exitosa", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthResponse.class))),
-        @ApiResponse(responseCode = "")
+        @ApiResponse(responseCode = "401", description = "Unauthorized. El access token no es válido", content = @Content),
+        @ApiResponse(responseCode = "409", description = "Conflic. El usuario ya está reistrado en la aplicación", content = @Content)
     })
     @PostMapping("/registro")
-    public ResponseEntity<?> registerGoogleUser(@RequestBody Map<String, String> request) {
+    public ResponseEntity<?> registerGoogleUser(@io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(schema = @Schema(type = "object", example = "{\"accessToken\":\"ya29.a0AfH6SM...\"}"))) @RequestBody Map<String, String> request) {
         try {
             String accessToken = request.get("accessToken");
 

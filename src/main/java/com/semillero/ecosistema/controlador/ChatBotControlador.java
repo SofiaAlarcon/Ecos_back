@@ -2,6 +2,7 @@ package com.semillero.ecosistema.controlador;
 
 import java.util.Optional;
 
+import org.checkerframework.checker.units.qual.degrees;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,6 +22,11 @@ import com.semillero.ecosistema.repositorio.IUsuarioRepositorio;
 import com.semillero.ecosistema.servicio.ChatBotServicio;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Chat bot", description = "Operaciones relacionadas con el chat bot")
@@ -33,16 +39,32 @@ public class ChatBotControlador {
 	private ChatBotServicio chatBotServicio;
 	
 	@Operation(summary = "Pregunta", description = "Muestra la respuesta correspondiente a la pregunta seleccionada por el usuario")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Operación exitosa", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Respuesta.class))),
+		@ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
+	})
 	@GetMapping(value="/pregunta", params="preguntaId")
-	public ResponseEntity<Respuesta> obtenerRespuesta(@RequestParam Long preguntaId) {
+	public ResponseEntity<Respuesta> obtenerRespuesta(@Parameter(description = "ID de la pregunta seleccionada por el usuario", example = "1") @RequestParam Long preguntaId) {
 		Respuesta respuesta = chatBotServicio.mostrarRespuesta(preguntaId);
 		return ResponseEntity.ok(respuesta);
 	}
 	
 	@Operation(summary = "Preguntar", description = "Permite que usuarios autenticados con rol 'USUARIO' envíen preguntas")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Operación exitosa", content = @Content(mediaType ="application/json", schema = @Schema(type = "string"))),
+		@ApiResponse(responseCode = "404", description = "Not found. No se encontró ningún usuario con el ID indicado", content = @Content),
+		@ApiResponse(responseCode = "403", description = "Unauthorized. El usuario no cuenta con los permisos requeridos para enviar una pregunta", content = @Content)
+	})
 	@PreAuthorize("hasRole('USUARIO')")
 	@PostMapping(value="/preguntar/usuario/{usuarioId}")
-	public ResponseEntity<String> enviarPregunta(@PathVariable Long usuarioId, @RequestBody Pregunta pregunta) {
+	public ResponseEntity<String> enviarPregunta(@Parameter(description = "ID del usuario", example = "1")
+	@PathVariable Long usuarioId,
+	@io.swagger.v3.oas.annotations.parameters.RequestBody(
+        description = "Contenido de la consulta",
+        required = true,
+        content = @Content(schema = @Schema(implementation = Pregunta.class))
+    )
+	@RequestBody Pregunta pregunta) {
 		Optional<Usuario> usuario = usuarioRepositorio.findById(usuarioId);
 		if (usuario.isPresent() && usuario.get().getRol() == RolDeUsuario.USUARIO) {
 			chatBotServicio.guardarPregunta(usuarioId, pregunta);
