@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.semillero.ecosistema.cloudinary.dto.ImageModel;
 import com.semillero.ecosistema.dto.ProveedorDto;
 import com.semillero.ecosistema.dto.RevisionDto;
+import com.semillero.ecosistema.dto.StatusDto;
 import com.semillero.ecosistema.entidad.Proveedor;
 import com.semillero.ecosistema.entidad.Usuario;
 import com.semillero.ecosistema.entidad.Imagen;
@@ -298,7 +299,15 @@ public class ProveedorControlador {
 		return ResponseEntity.ok(nuevoEstado);
 	}
 	
-	@Operation(summary = "Mis estados", description = "Permite que el usuario registrado vea el estado de sus proveedores")
+	@Operation(summary = "Mis estados", description = "Permite que el usuario registrado vea una lista con el estado de sus proveedores")
+	@Parameter(name = "usuarioId", description = "ID del usuario que quiere ver el estado de sus proveedores", required = true, example = "1")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Operación exitosa", content = @Content(
+			mediaType = "multipart/form-data",
+			schema = @Schema(implementation = StatusDto.class)
+		)),
+		@ApiResponse(responseCode = "404", description = "Not found. No se encontró nigun proveedor para el ID de usuario indicado", content = @Content)
+	})
 	@PreAuthorize("hasRole('USUARIO')")
 	@GetMapping("/misEstados/{usuarioId}")
 	public ResponseEntity<?> misEstados(@PathVariable Long usuarioId) {
@@ -312,6 +321,18 @@ public class ProveedorControlador {
 	}
 	
 	@Operation(summary = "Proveedores cercanos", description = "Permite que cualquier usuario pueda ver una lista de los proveedores cercanos a su ubicación actual")
+	@Parameters({
+		@Parameter(name = "lat", description = "Valor correspondiente a la latitud del usuario", required = false, example = "32.2"),
+		@Parameter(name = "lng", description = "Valor correspondiente a la longitud del usuario", required = false, example = "58.8")
+	})
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Operación exitosa", content = @Content(
+			mediaType = "application/json",
+			array = @ArraySchema(schema = @Schema(implementation = Proveedor.class))
+		)),
+		@ApiResponse(responseCode = "404", description = "Not found. No se encontraron proveedores cercanos a la latitud y longitud indicados",
+		content = @Content)
+	})
 	@GetMapping(value = "/proveedoresCercanos")
 	public List<Proveedor> obtenerProveedoresCercanos(@RequestParam(required = false) Double lat, @RequestParam(required = false) Double lng) throws Exception{
 		return proveedorServicio.obtenerProveedoresCercanos(lat, lng);
