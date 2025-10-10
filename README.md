@@ -1,3 +1,14 @@
-Al realizar un git push solo subir los archivos que realizaron no hacer un git add . y no subir el archivo application.properties
+# API Rest Ecosistema
+Plataforma de difusión donde proveedores de triple impacto pueden publicar sus servicios y ser contactados por clientes.
 
-Las clases creadas en los paquetes pueden borrarlas solo las cree para que me tome los paquetes que cree
+## Features
+-   Inicio de sesión con Google OAuth
+-   Realizar publicaciones
+-   Buscar proveedores cercanos
+
+## Aspectos técnicos
+-   API Rest desarrollada en Java 17
+-   Integraciones:
+    -   Google OAuth para autenticación
+    -   Cloudinary para almacenamiento de imágenes
+    -   JOpenCage para geolocalización
