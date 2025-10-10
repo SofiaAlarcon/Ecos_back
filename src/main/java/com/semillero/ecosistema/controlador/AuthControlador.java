@@ -21,6 +21,11 @@ import com.semillero.ecosistema.servicio.UsuarioServicioImpl;
 import com.semillero.ecosistema.util.JwtUtil;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Auth", description = "Operaciones relacionadas con la autenticación de usuarios")
@@ -34,9 +39,19 @@ public class AuthControlador {
     @Autowired
     private JwtUtil jwtUtil;
 
-    @Operation(summary = "Login", description = "Autenticación de usuarios ya registrados")
+    @Operation(summary = "Login con Google", description = "Autenticación de usuarios a partir de un accessToken válido de Google OAuth2."
+            + " Si el usuario ya existe en la base de datos, se genera un JWT y se devuelve")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operación exitosa", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthResponse.class)
+            )),
+            @ApiResponse(responseCode = "400", description = "Bad request. Falta el accessToken", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Not found. Usuario no encontrado", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized. Access token no válido", content = @Content)
+    })
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateGoogleUser(@RequestBody Map<String, String> request) {
+    public ResponseEntity<?> authenticateGoogleUser(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(schema = @Schema(type = "object", example = "{\"accessToken\":\"ya29.a0AfH6SM...\"}")))
+            @RequestBody Map<String, String> request) {
         try {
             String accessToken = request.get("accessToken");
 
@@ -55,26 +70,26 @@ public class AuthControlador {
                 JsonNode userJsonNode = mapper.readTree(response.getBody());
                 String email = userJsonNode.get("email").asText();
 
-                // Autentica al usuario en tu sistema
+                // Autentica al usuario en el sistema
                 Usuario usuario = usuarioServicio.authenticateUser(email);
 
                 if (usuario == null) {
-                    return ResponseEntity.status(401).body("Usuario no encontrado");
+                    return ResponseEntity.status(404).body("Usuario no encontrado");
                 }
 
                 // Genera un JWT para el usuario autenticado
                 String jwt = jwtUtil.generateToken(usuario);
-                
-             // Crear la cookie
+
+                // Crear la cookie
                 ResponseCookie cookie = ResponseCookie.from("jwt", jwt)
                         .httpOnly(true)
                         .secure(true)
                         .path("/")
-                        .maxAge(36000)  // Duración en segundos
+                        .maxAge(36000) // Duración en segundos
                         .build();
-                
+
                 AuthResponse authResponse = new AuthResponse(jwt);
-                
+
                 return ResponseEntity.ok()
                         .header(HttpHeaders.SET_COOKIE, cookie.toString())
                         .body(authResponse);
@@ -83,16 +98,19 @@ public class AuthControlador {
             }
         } catch (Exception e) {
             return ResponseEntity.status(401).body("Invalid access token");
-        }    
+        }
     }
-    
-    @Operation(summary = "Registro", description = "Permite el registro de usuarios nuevos")
+
+    @Operation(summary = "Registro", description = "Permite el registro de usuarios nuevos, gerando el JWT correspondiente y devolviéndolo")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Operación exitosa", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthResponse.class))),
+        @ApiResponse(responseCode = "")
+    })
     @PostMapping("/registro")
     public ResponseEntity<?> registerGoogleUser(@RequestBody Map<String, String> request) {
         try {
             String accessToken = request.get("accessToken");
-            
-            
+
             if (accessToken == null) {
                 return ResponseEntity.badRequest().body("Missing access token");
             }
@@ -107,8 +125,8 @@ public class AuthControlador {
                 ObjectMapper mapper = new ObjectMapper();
                 JsonNode userJsonNode = mapper.readTree(response.getBody());
                 String email = userJsonNode.get("email").asText();
-                String nombre=userJsonNode.get("given_name").asText();
-                String apellido=userJsonNode.get("family_name").asText();
+                String nombre = userJsonNode.get("given_name").asText();
+                String apellido = userJsonNode.get("family_name").asText();
 
                 // Verifica si el usuario ya existe
                 Usuario existe = usuarioServicio.authenticateUser(email);
@@ -123,20 +141,20 @@ public class AuthControlador {
                 nuevoUsuario.setApellido(apellido);
                 nuevoUsuario.setEmail(email);
                 nuevoUsuario.setRol(RolDeUsuario.USUARIO);
-                
+
                 usuarioServicio.guardar(nuevoUsuario);
 
                 // Genera un JWT para el usuario registrado
                 String jwt = jwtUtil.generateToken(nuevoUsuario);
-                
+
                 // Crear la cookie
                 ResponseCookie cookie = ResponseCookie.from("jwt", jwt)
                         .httpOnly(true)
                         .secure(true)
                         .path("/")
-                        .maxAge(36000)  // Duración en segundos
+                        .maxAge(36000) // Duración en segundos
                         .build();
-                
+
                 AuthResponse authResponse = new AuthResponse(jwt);
 
                 return ResponseEntity.ok()
@@ -147,6 +165,6 @@ public class AuthControlador {
             }
         } catch (Exception e) {
             return ResponseEntity.status(401).body("Invalid access token");
-        }    
+        }
     }
 }

@@ -46,7 +46,7 @@ public class DashboardControlador {
 		return estadisticas;
 	}
 
-	@Operation(summary = "Estadísticas por categoría", description = "Devuelve una lista con las estadísticas de los proveedores de todas las categorías ordenadas alfabéticamente")
+	@Operation(summary = "Estadísticas por categoría", description = "Devuelve una lista con la cantidad de proveedores para cada categoría, ordenada alfabeticamente")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "Operación exitosa", content = @Content(mediaType = "application/json", schema = @Schema(type = "oject", example = "{\"Gastronomía\":8,\"Cosmética\":2,\"Hogar y Jardín\":6,\"total\":16}"))),
 		@ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
