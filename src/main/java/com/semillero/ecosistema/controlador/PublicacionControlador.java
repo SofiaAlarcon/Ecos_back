@@ -53,9 +53,9 @@ public class PublicacionControlador {
 
 	@Operation(summary = "Publicar", description = "Permite a los usuarios registrados con rol 'ADMIN' crear publicaciones")
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Publicación creada", content = @Content),
-			@ApiResponse(responseCode = "403", description = "El usuario no cuenta con los permisos necesarios. Debe tener el rol 'ADMIN'", content = @Content),
-			@ApiResponse(responseCode = "404", description = "No se encontró ningún usuario con el ID indicado", content = @Content)
+		@ApiResponse(responseCode = "200", description = "Operación exitosa", content = @Content),
+		@ApiResponse(responseCode = "403", description = "Acceso denegado. El usuario no cuenta con los permisos necesarios. Debe tener el rol 'ADMIN'", content = @Content),
+		@ApiResponse(responseCode = "404", description = "Not found. No se encontró ningún usuario con el ID indicado", content = @Content)
 	})
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping(value = "/publicar/{userId}", consumes = "multipart/form-data")
@@ -102,8 +102,8 @@ public class PublicacionControlador {
 
 	@Operation(summary = "Publicar", description = "Permite a los usuarios registrados con rol 'ADMIN' editar publicaciones existentes")
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "204", description = "Publicación editada con éxito", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Publicacion.class))),
-			@ApiResponse(responseCode = "404", description = "No se encontró ninguna publicación con el ID indicado", content = @Content)
+			@ApiResponse(responseCode = "204", description = "Operación exitosa", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Publicacion.class))),
+			@ApiResponse(responseCode = "404", description = "Not found. No se encontró ninguna publicación con el ID indicado", content = @Content)
 	})
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping(value = "/editar-publicacion/publicacion/{publicacionId}", consumes = "multipart/form-data")
@@ -121,8 +121,8 @@ public class PublicacionControlador {
 
 	@Operation(summary = "Eliminar imagen", description = "Permite a los usuarios registrados con rol 'ADMIN' eliminar imágenes de publicaciones existentes")
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "204", description = "Imagen eliminada", content = @Content),
-			@ApiResponse(responseCode = "404", description = "No se encontró ninguna imagen con el ID indicado", content = @Content)
+			@ApiResponse(responseCode = "204", description = "Operación exitosa", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Not. found. No se encontró ninguna imagen con el ID indicado", content = @Content)
 	})
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping(value = "/eliminar/{imagenId}")
@@ -138,8 +138,8 @@ public class PublicacionControlador {
 
 	@Operation(summary = "Actualizar imagen", description = "Permite a los usuarios registrados con rol 'ADMIN' actualizar imágenes de publicaciones existentes")
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Imagen editada", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Imagen.class))),
-			@ApiResponse(responseCode = "404", description = "No se encontró ninguna imagen con el ID indicado", content = @Content(mediaType = "text/plain"))
+			@ApiResponse(responseCode = "200", description = "Operación exitosa", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Imagen.class))),
+			@ApiResponse(responseCode = "404", description = "Not found. No se encontró ninguna imagen con el ID indicado", content = @Content(mediaType = "text/plain"))
 	})
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/actualizarImagen/{imagenId}")
@@ -157,8 +157,8 @@ public class PublicacionControlador {
 
 	@Operation(summary = "Borrar publicación", description = "Permite a los usuarios registrados con rol 'ADMIN' eliminar publicaciones existentes a partir de un ID")
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "204", description = "Publicación borrada"),
-			@ApiResponse(responseCode = "404", description = "No se encontró la publicación indicada")
+			@ApiResponse(responseCode = "204", description = "Operación exitosa"),
+			@ApiResponse(responseCode = "404", description = "Not found. No se encontró la publicación indicada")
 	})
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping(value = "/borrar-publicacion/{id}")
@@ -176,7 +176,7 @@ public class PublicacionControlador {
 
 	@Operation(summary = "Obtener publicaciones", description = "Permite a los usuarios registrados con rol 'ADMIN' obtener una lista con todas las publicaciones, tanto las activas como las que han sido borradas")
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Devuelve una lista con las publicaciones", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Publicacion.class)))),
+			@ApiResponse(responseCode = "200", description = "Operación exitosa", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Publicacion.class)))),
 			@ApiResponse(responseCode = "403", description = "Acceso denegado. El usuario debe tener rol 'ADMIN'", content = @Content)
 	})
 	@PreAuthorize("hasRole('ADMIN')")
@@ -187,7 +187,7 @@ public class PublicacionControlador {
 
 	@Operation(summary = "Obtener publicaciones activas", description = "Permite que los usuarios que no se hayan registrado puedan ver las publicaciones activas")
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Devuelve una lista de las publicaciones activas", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Publicacion.class)))),
+			@ApiResponse(responseCode = "200", description = "Operación exitosa", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Publicacion.class)))),
 			@ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
 	})
 	@GetMapping(value = "/publicaciones/activas")
