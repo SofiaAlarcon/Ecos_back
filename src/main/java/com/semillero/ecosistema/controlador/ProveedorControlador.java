@@ -55,13 +55,13 @@ public class ProveedorControlador {
 	@Autowired
 	private ImagenServicioImpl imagenServicioImpl;
 
-	@Operation(summary = "Crear proveedor", description = "Permite que usuarios registrados creen proveedores")
+	@Operation(summary = "Crear proveedor", description = "Permite que usuarios registrados (rol 'USUARIO') creen proveedores")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "Operación exitosa", content = @Content(mediaType = "application/json", schema = @Schema(example = "\"Proveedor creado con éxito\""))),
 		@ApiResponse(responseCode = "404", description= "Not found. No se encontró ningún usuario con el id indicado", content = @Content(mediaType = "application/json", schema = @Schema(example= "\"Usuario no encontrado\"")) )
 	})
 	@PreAuthorize("hasRole('USUARIO')")
-	@PostMapping(value="/crearProveedor/usuario/{usuarioId}",consumes = "multipart/form-data")
+	@PostMapping(value="/proveedor/usuario/{usuarioId}",consumes = "multipart/form-data")
 	public ResponseEntity<?> crearProveedor(@PathVariable Long usuarioId,@ModelAttribute ProveedorDto proveedorDto,
 	@Parameter(description = "Archivos de imagen del proveedor",
 	required = true,
@@ -120,7 +120,7 @@ public class ProveedorControlador {
 		@ApiResponse(responseCode = "404", description = "Not found. No se encontró ningún usuario o ningún proveedor con los ID indicados", content = @Content)
 	})
 	@PreAuthorize("hasRole('USUARIO')")
-	@PutMapping(value = "/editarProveedor/usuario/{usuarioId}/proveedor/{proveedorId}", consumes = "multipart/form-data")
+	@PutMapping(value = "/proveedor/usuario/{usuarioId}/proveedor/{proveedorId}", consumes = "multipart/form-data")
 	public ResponseEntity<?> editarProveedor(@PathVariable Long usuarioId,@PathVariable Long proveedorId, @ModelAttribute ProveedorDto proveedorDto) {
 
 	    try {
@@ -141,7 +141,7 @@ public class ProveedorControlador {
 		@ApiResponse(responseCode = "404", description = "Not found. No se encontró ninguna imagen con el ID indicado", content = @Content)
 	})
 	@PreAuthorize("hasRole('USUARIO')")
-	@DeleteMapping(value = "/eliminarImagen/{imagenId}")
+	@DeleteMapping(value = "/imagen/{imagenId}")
 	public ResponseEntity<?> eliminarImagen(@PathVariable Long imagenId) {
 	    try {
 	        imagenServicioImpl.eliminarImagen(imagenId);
@@ -171,7 +171,7 @@ public class ProveedorControlador {
 		@ApiResponse(responseCode = "400", description = "Bad request. Error al subir el archivo", content = @Content)
 	})
 	@PreAuthorize("hasRole('USUARIO')")
-    @PutMapping("/actualizar/{imagenId}")
+    @PutMapping("/imagen/{imagenId}")
     public ResponseEntity<?> actualizarImagen(
             @PathVariable Long imagenId,
             @RequestParam("file") MultipartFile file) {
@@ -192,9 +192,9 @@ public class ProveedorControlador {
 			array = @ArraySchema(
 				schema = @Schema(implementation = Proveedor.class)
 			))),
-		@ApiResponse(responseCode = "404", description = "Not found. No se encontron proveedores con el nombre indicado", content = @Content)
+		@ApiResponse(responseCode = "404", description = "Not found. No se encontraron proveedores con el nombre indicado", content = @Content)
 	})
-	@GetMapping("/buscar")
+	@GetMapping("/proveedorPorNombre")
 	public ResponseEntity<List<Proveedor>>buscarProveedoresPorNombre(@RequestParam String query){
 		try {
 			List<Proveedor> proveedores=proveedorServicio.buscarPorNombre(query);
@@ -212,7 +212,7 @@ public class ProveedorControlador {
 		)),
 		@ApiResponse(responseCode = "204", description = "Not found. No se encontraron proveedores registrados", content = @Content)
 	})
-	@GetMapping("/mostrarTodo")
+	@GetMapping("/provedores")
 	public ResponseEntity<List<Proveedor>>mostrarTodo(){
 		return ResponseEntity.ok(proveedorServicio.mostrarTodo());
 	}
@@ -227,7 +227,7 @@ public class ProveedorControlador {
 		),
 		@ApiResponse(responseCode = "404", description = "Not found. No se encontró ningún proveedor con el ID indicado", content = @Content)
 	})
-	@GetMapping("/buscarPorId/{proveedorId}")
+	@GetMapping("/proveedorPorId/{proveedorId}")
 	public ResponseEntity<Proveedor> buscarProveedorPorId(@PathVariable Long proveedorId) throws Exception {
 		return ResponseEntity.ok(proveedorServicio.buscarProveedorPorId(proveedorId));
 	}
@@ -241,7 +241,7 @@ public class ProveedorControlador {
 		)),
 		@ApiResponse(responseCode = "404", description = "Not found. No se encontraron proveedores para la categoría indicada", content = @Content)
 	})
-	@GetMapping("/buscarPorCategoria/{categoriaId}")
+	@GetMapping("/proveedorPorCategoria/{categoriaId}")
     public ResponseEntity<List<Proveedor>> buscarProveedoresPorCategoria(@PathVariable Long categoriaId) {
 		return ResponseEntity.ok(proveedorServicio.buscarPorCategoriaId(categoriaId));
 	}
@@ -254,7 +254,7 @@ public class ProveedorControlador {
 		)),
 		@ApiResponse(responseCode = "404", description = "Not found. No se encontraron proveedores activos", content = @Content)
 	})
-	@GetMapping("/mostrarProveedorActivo")
+	@GetMapping("/proveedorActivo")
 	public ResponseEntity<List<Proveedor>> mostrarProveedorActivo(){
 		return ResponseEntity.ok(proveedorServicio.mostrarProveedoresActivos());
 	}
@@ -269,7 +269,7 @@ public class ProveedorControlador {
 		@ApiResponse(responseCode = "404", description = "Not found. No se encontrarion proveedores nuevos", content = @Content)
 	})
 	@PreAuthorize("hasRole('ADMIN')")
-	@GetMapping("/nuevoProveedor")
+	@GetMapping("/proveedorNuevo")
 	public ResponseEntity<List<Proveedor>>mostrarProveedorNuevo(){
 		return ResponseEntity.ok(proveedorServicio.mostrarProveedorNuevo());
 	}
@@ -293,7 +293,7 @@ public class ProveedorControlador {
 		@ApiResponse(responseCode = "404", description = "Not found. No se encontró ningun proveedor con el ID indicado", content = @Content)
 	})
 	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping("/editarEstado/{id}")
+	@PutMapping("/estado/{id}")
 	public ResponseEntity<?>editarEstado(@PathVariable Long id,@RequestBody RevisionDto revisionDto){
 		Proveedor nuevoEstado=proveedorServicio.administrarProveedor(id, revisionDto.getEstado(), revisionDto.getFeedback());
 		return ResponseEntity.ok(nuevoEstado);
@@ -333,12 +333,9 @@ public class ProveedorControlador {
 		@ApiResponse(responseCode = "404", description = "Not found. No se encontraron proveedores cercanos a la latitud y longitud indicados",
 		content = @Content)
 	})
-	@GetMapping(value = "/proveedoresCercanos")
+	@GetMapping(value = "/proveedorCercano")
 	public List<Proveedor> obtenerProveedoresCercanos(@RequestParam(required = false) Double lat, @RequestParam(required = false) Double lng) throws Exception{
 		return proveedorServicio.obtenerProveedoresCercanos(lat, lng);
 	}
 
-	
-	
-	
 }
