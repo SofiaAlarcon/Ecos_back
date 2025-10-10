@@ -39,7 +39,7 @@ public class ChatBotControlador {
 		return ResponseEntity.ok(respuesta);
 	}
 	
-	@Operation(summary = "Preguntar", description = "Permite que usuarios autenticados envíen preguntas")
+	@Operation(summary = "Preguntar", description = "Permite que usuarios autenticados con rol 'USUARIO' envíen preguntas")
 	@PreAuthorize("hasRole('USUARIO')")
 	@PostMapping(value="/preguntar/usuario/{usuarioId}")
 	public ResponseEntity<String> enviarPregunta(@PathVariable Long usuarioId, @RequestBody Pregunta pregunta) {
