@@ -16,12 +16,12 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 public class EmailConfig {
 
 	//ir a properties y agregar un correo
-    @Value("${email.username}")
+    @Value("${email.username:NOT_CONFIGURED}")
     private String email;
 
     //ir a properties y agregar una contraseña para esto tienen que habilitar la verficacion de dos pasos
     //y luego ir a contraseña de aplicacion crear una y pegar la contraseña que les de google
-    @Value("${email.password}")
+    @Value("${email.password:NOT_CONFIGURED}")
     private String password;
 
     private Properties getMailProperties() {
