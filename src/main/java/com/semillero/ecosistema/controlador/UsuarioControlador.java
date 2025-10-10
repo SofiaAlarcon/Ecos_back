@@ -13,6 +13,7 @@ import com.semillero.ecosistema.servicio.UsuarioServicioImpl;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,8 +30,8 @@ public class UsuarioControlador {
 	
 	@Operation(summary = "Desactivar usuario", description = "Permite desactivar un usuario determinado a partir de su ID")
 	@ApiResponses(value = {
-		@ApiResponse(responseCode = "200", description = "Operación exitosa"),
-		@ApiResponse(responseCode = "404", description = "Not found. No se encontró usuario con el ID proporcionado")
+		@ApiResponse(responseCode = "200", description = "Operación exitosa", content = @Content),
+		@ApiResponse(responseCode = "404", description = "Not found. No se encontró usuario con el ID proporcionado", content = @Content)
 	})
 	@PutMapping("/desactivar/{id}")
 	public ResponseEntity<String> desactivarUsuario(@Parameter(description = "ID del usuario a desactivar", example = "1")@PathVariable Long id){
