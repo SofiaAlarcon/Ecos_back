@@ -20,6 +20,10 @@ import com.semillero.ecosistema.entidad.Usuario.RolDeUsuario;
 import com.semillero.ecosistema.repositorio.IUsuarioRepositorio;
 import com.semillero.ecosistema.servicio.ChatBotServicio;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "Chat bot", description = "Operaciones relacionadas con el chat bot")
 @RestController
 @RequestMapping
 public class ChatBotControlador {
@@ -28,12 +32,14 @@ public class ChatBotControlador {
 	@Autowired
 	private ChatBotServicio chatBotServicio;
 	
+	@Operation(summary = "Pregunta", description = "Muestra la respuesta correspondiente a la pregunta seleccionada por el usuario")
 	@GetMapping(value="/pregunta", params="preguntaId")
 	public ResponseEntity<Respuesta> obtenerRespuesta(@RequestParam Long preguntaId) {
 		Respuesta respuesta = chatBotServicio.mostrarRespuesta(preguntaId);
 		return ResponseEntity.ok(respuesta);
 	}
 	
+	@Operation(summary = "Preguntar", description = "Permite que usuarios autenticados envíen preguntas")
 	@PreAuthorize("hasRole('USUARIO')")
 	@PostMapping(value="/preguntar/usuario/{usuarioId}")
 	public ResponseEntity<String> enviarPregunta(@PathVariable Long usuarioId, @RequestBody Pregunta pregunta) {

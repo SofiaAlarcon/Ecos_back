@@ -15,6 +15,10 @@ import com.semillero.ecosistema.dto.PaisDto;
 import com.semillero.ecosistema.entidad.Provincia;
 import com.semillero.ecosistema.servicio.PaisProvinciaServiceImpl;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "País y provincias", description = "Operaciones relacionadas con países y sus provincias")
 @RestController
 @RequestMapping("/ubicacion")
 @Validated
@@ -23,11 +27,13 @@ public class PaisProvinciaControlador {
 	@Autowired
 	private PaisProvinciaServiceImpl paisProvinciaServiceImpl;
 	
+	@Operation(summary = "Países", description = "Devuelve una lista de todos los países")
 	@GetMapping("/paises")
     public List<PaisDto> getAllPaises() {
         return paisProvinciaServiceImpl.mostrarTodo();
     }
 	
+	@Operation(summary = "Provincias", description = "Devuelve una lista de las provincias de un país determinado")
 	@GetMapping("/paises/{paisId}/provincias")
 	public ResponseEntity<?>mostrarProvinciasPorId(@PathVariable Long paisId){
 		List<Provincia>provincia=paisProvinciaServiceImpl.mostrarProvinciasPorPaisId(paisId);

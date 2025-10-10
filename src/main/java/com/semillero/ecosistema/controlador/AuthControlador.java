@@ -20,7 +20,10 @@ import com.semillero.ecosistema.entidad.Usuario.RolDeUsuario;
 import com.semillero.ecosistema.servicio.UsuarioServicioImpl;
 import com.semillero.ecosistema.util.JwtUtil;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
+@Tag(name = "Auth", description = "Operaciones relacionadas con la autenticación de usuarios")
 @RestController
 @RequestMapping("/auth")
 public class AuthControlador {
@@ -31,6 +34,7 @@ public class AuthControlador {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Operation(summary = "Login", description = "Autenticación de usuarios ya registrados")
     @PostMapping("/login")
     public ResponseEntity<?> authenticateGoogleUser(@RequestBody Map<String, String> request) {
         try {
@@ -82,6 +86,7 @@ public class AuthControlador {
         }    
     }
     
+    @Operation(summary = "Registro", description = "Permite el registro de usuarios nuevos")
     @PostMapping("/registro")
     public ResponseEntity<?> registerGoogleUser(@RequestBody Map<String, String> request) {
         try {

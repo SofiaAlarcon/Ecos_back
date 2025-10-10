@@ -39,8 +39,11 @@ import com.semillero.ecosistema.servicio.ImagenServicioImpl;
 import com.semillero.ecosistema.servicio.ProveedorServicio;
 import com.semillero.ecosistema.servicio.UsuarioServicioImpl;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+@Tag(name = "Proveedores", description = "Operaciones relacionadas con los proveedores")
 @RestController
 @RequestMapping
 public class ProveedorControlador {
@@ -57,7 +60,7 @@ public class ProveedorControlador {
 	@Autowired
 	private ImagenServicioImpl imagenServicioImpl;
 
-	
+	@Operation(summary = "Crear proveedor", description = "Permite crear proveedores a usuarios registrados")
 	@PreAuthorize("hasRole('USUARIO')")
 	@PostMapping(value="/crearProveedor/usuario/{usuarioId}",consumes = "multipart/form-data")
 	public ResponseEntity<?> crearProveedor(@PathVariable Long usuarioId,@ModelAttribute ProveedorDto proveedorDto,@RequestPart("imagenes") List<MultipartFile> files) {
@@ -83,6 +86,7 @@ public class ProveedorControlador {
 		}
 	}
 	
+	@Operation(summary = "Editar proveedor", description = "Permite que usuarios registrados editen sus proveedores")
 	@PreAuthorize("hasRole('USUARIO')")
 	@PutMapping(value = "/editarProveedor/usuario/{usuarioId}/proveedor/{proveedorId}", consumes = "multipart/form-data")
 	public ResponseEntity<?> editarProveedor(
@@ -100,6 +104,7 @@ public class ProveedorControlador {
 	    }
 	}
 	
+	@Operation(summary = "Eliminar imagen", description = "Permite que usuarios registrados eliminen una imagen")
 	@PreAuthorize("hasRole('USUARIO')")
 	@DeleteMapping(value = "/eliminarImagen/{imagenId}")
 	public ResponseEntity<?> eliminarImagen(@PathVariable Long imagenId) {
@@ -111,6 +116,7 @@ public class ProveedorControlador {
 	    }
 	}
 	
+	@Operation(summary = "Editar imagen", description = "Permite que usuarios registrados editen una imagen")
 	@PreAuthorize("hasRole('USUARIO')")
     @PutMapping("/actualizar/{imagenId}")
     public ResponseEntity<?> actualizarImagen(
@@ -125,6 +131,7 @@ public class ProveedorControlador {
         }
     }
 
+	@Operation(summary = "Buscar proveedores", description = "Devuelve una lista de proveedores a partir de un nombre")
 	@GetMapping("/buscar")
 	public ResponseEntity<List<Proveedor>>buscarProveedoresPorNombre(@RequestParam String query){
 		try {
@@ -135,32 +142,38 @@ public class ProveedorControlador {
 		}
 	}
 	
+	@Operation(summary = "Mostrar todo", description = "Devuelve una lista de todos los proveedores")
 	@GetMapping("/mostrarTodo")
 	public ResponseEntity<List<Proveedor>>mostrarTodo(){
 		return ResponseEntity.ok(proveedorServicio.mostrarTodo());
 	}
 
+	@Operation(summary = "Buscar por ID", description = "Devuelve una lista de proveedores a partir de un id")
 	@GetMapping("/buscarPorId/{proveedorId}")
 	public ResponseEntity<Proveedor> buscarProveedorPorId(@PathVariable Long proveedorId) throws Exception {
 		return ResponseEntity.ok(proveedorServicio.buscarProveedorPorId(proveedorId));
 	}
 	
+	@Operation(summary = "Buscar por categoría", description = "Devuelve una lista de proveedores a partir de una categoría")
 	@GetMapping("/buscarPorCategoria/{categoriaId}")
     public ResponseEntity<List<Proveedor>> buscarProveedoresPorCategoria(@PathVariable Long categoriaId) {
 		return ResponseEntity.ok(proveedorServicio.buscarPorCategoriaId(categoriaId));
 	}
 	
+	@Operation(summary = "Mostrar activos", description = "Devuelve una lista de proveedores activos")
 	@GetMapping("/mostrarProveedorActivo")
 	public ResponseEntity<List<Proveedor>> mostrarProveedorActivo(){
 		return ResponseEntity.ok(proveedorServicio.mostrarProveedoresActivos());
 	}
 	
+	@Operation(summary = "Nuevo proveedor", description = "Muestra una lista de los proveedores postulados al usuario ADMIN")
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/nuevoProveedor")
 	public ResponseEntity<List<Proveedor>>mostrarProveedorNuevo(){
 		return ResponseEntity.ok(proveedorServicio.mostrarProveedorNuevo());
 	}
 	
+	@Operation(summary = "Editar estado", description = "Permite que el ADMIN edite el estado de un proveedor determinado")
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/editarEstado/{id}")
 	public ResponseEntity<?>editarEstado(@PathVariable Long id,@RequestBody RevisionDto revisionDto){
@@ -168,6 +181,7 @@ public class ProveedorControlador {
 		return ResponseEntity.ok(nuevoEstado);
 	}
 	
+	@Operation(summary = "Mis estados", description = "Permite que el usuario registrado vea el estado de sus proveedores")
 	@PreAuthorize("hasRole('USUARIO')")
 	@GetMapping("/misEstados/{usuarioId}")
 	public ResponseEntity<?> misEstados(@PathVariable Long usuarioId) {
@@ -180,6 +194,7 @@ public class ProveedorControlador {
 		
 	}
 	
+	@Operation(summary = "Proveedores cercanos", description = "Permite que cualquier usuario pueda ver una lista de los proveedores cercanos a su ubicación actual")
 	@GetMapping(value = "/proveedoresCercanos")
 	public List<Proveedor> obtenerProveedoresCercanos(@RequestParam(required = false) Double lat, @RequestParam(required = false) Double lng) throws Exception{
 		return proveedorServicio.obtenerProveedoresCercanos(lat, lng);

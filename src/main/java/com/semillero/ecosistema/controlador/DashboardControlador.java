@@ -13,7 +13,10 @@ import com.semillero.ecosistema.entidad.Categoria;
 import com.semillero.ecosistema.repositorio.ICategoriaRepositorio;
 import com.semillero.ecosistema.servicio.DashboardServicio;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
+@Tag(name = "Dashboard", description = "Operaciones relacionadas con el dashboard de administrador")
 @RestController
 public class DashboardControlador {
 
@@ -23,7 +26,7 @@ public class DashboardControlador {
 	@Autowired
 	private ICategoriaRepositorio categoriaRepositorio;
 	
-	
+	@Operation(summary = "Estadísticas de proveedores", description = "Devuelve una lista con las estadísticas de los proveedores")
 	@GetMapping("/estadisticasProveedores")
     public Map<String, Long> obtenerEstadisticasProveedores() {
         Map<String, Long> estadisticas = new HashMap<>();
@@ -35,6 +38,7 @@ public class DashboardControlador {
         return estadisticas;
     }
 	
+	@Operation(summary = "Proveedores por categoría", description = "Devuelve una lista de los proveedores por categoría")
 	@GetMapping("/proveedoresPorCategoria")
 	public Map<String, Long> obtenerEstadisticasPorCategoria() {
 	    Map<String, Long> estadisticas = new HashMap<>();
@@ -50,6 +54,7 @@ public class DashboardControlador {
 	    return sortedEstadisticas;
 	}
 	
+	@Operation(summary = "Visualizaciones", description = "Devuelve una lista de las visualizaciones de las publicaciones")
 	@GetMapping("/visualizaciones")
 	public List<Map<String, Object>> obtenerDetallesDeTodas() {
 	    return dashboardServicio.obtenerDetallesDeTodasLasPublicaciones();

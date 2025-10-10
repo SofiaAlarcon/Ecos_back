@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.semillero.ecosistema.entidad.Usuario;
 import com.semillero.ecosistema.servicio.UsuarioServicioImpl;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+@Tag(name = "Usuario", description = "Operaciones relacionadas con los usuarios")
 @RestController
 @RequestMapping("/usuarios")
 @Validated
