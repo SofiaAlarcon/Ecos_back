@@ -19,28 +19,34 @@ jobs:
       EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
 
     steps:
+      # 1️⃣ Descargar el código
       - name: Checkout code
         uses: actions/checkout@v4
-      
-      - name: Make mvnw executable
-        run: chmod +x mvnw
 
+      # 2️⃣ Instalar Java (usa la versión que uses en tu proyecto)
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Build the app
-        run: ./mvnw clean package -DskipTests
+      # 3️⃣ Instalar Maven (ya viene con setup-java, pero aseguramos que esté disponible)
+      - name: Verify Maven installation
+        run: mvn -v
 
-      - name: Run the app temporarily
+      # 4️⃣ Compilar la app
+      - name: Build the app
+        run: mvn clean package -DskipTests
+
+      # 5️⃣ Correr temporalmente la app y exportar la doc
+      - name: Run app & export Swagger JSON
         run: |
           nohup java -jar target/*.jar &
           sleep 10
           curl http://localhost:8080/v3/api-docs -o swagger-ui/openapi.json
           pkill -f "java"
 
+      # 6️⃣ Descargar la versión estática de Swagger UI
       - name: Download Swagger UI static files
         run: |
           mkdir -p swagger-ui
@@ -49,10 +55,12 @@ jobs:
           cp -r swagger-ui-master/dist/* swagger-ui/
           rm -rf swagger.zip swagger-ui-master
 
-      - name: Configure index.html
+      # 7️⃣ Configurar el index.html para usar tu JSON local
+      - name: Configure Swagger UI
         run: |
           sed -i 's#https://petstore.swagger.io/v2/swagger.json#openapi.json#g' swagger-ui/index.html
 
+      # 8️⃣ Publicar en GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
