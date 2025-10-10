@@ -100,10 +100,15 @@ public class PublicacionControlador {
 				.body("No se encontró ningún usuario con el id proporcionado o con los permisos requeridos");
 	}
 
-	@Operation(summary = "Publicar", description = "permite a los usuarios registrados con rol 'ADMIN' editar publicaciones existentes")
+	@Operation(summary = "Publicar", description = "Permite a los usuarios registrados con rol 'ADMIN' editar publicaciones existentes")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "204", description = "Publicación editada con éxito", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Publicacion.class))),
+			@ApiResponse(responseCode = "404", description = "No se encontró ninguna publicación con el ID indicado", content = @Content)
+	})
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping(value = "/editar-publicacion/publicacion/{publicacionId}", consumes = "multipart/form-data")
-	public ResponseEntity<?> editarPublicacion(@PathVariable Long publicacionId,
+	public ResponseEntity<?> editarPublicacion(
+			@Parameter(description = "ID de la publicación a editar", example = "1") @PathVariable Long publicacionId,
 			@ModelAttribute PublicacionDto publicacionEditada) {
 		try {
 			Publicacion publicacionActualizada = publicacionServicioImpl.editarPublicacion(publicacionId,
@@ -114,10 +119,15 @@ public class PublicacionControlador {
 		}
 	}
 
-	@Operation(summary = "Publicar", description = "permite a los usuarios registrados con rol 'ADMIN' eliminar imágenes de publicaciones existentes")
+	@Operation(summary = "Eliminar imagen", description = "Permite a los usuarios registrados con rol 'ADMIN' eliminar imágenes de publicaciones existentes")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "204", description = "Imagen eliminada", content = @Content),
+			@ApiResponse(responseCode = "404", description = "No se encontró ninguna imagen con el ID indicado", content = @Content)
+	})
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping(value = "/eliminar/{imagenId}")
-	public ResponseEntity<?> eliminarImagen(@PathVariable Long imagenId) {
+	public ResponseEntity<?> eliminarImagen(
+			@Parameter(description = "ID de la imagen a eliminar", example = "1") @PathVariable Long imagenId) {
 		try {
 			imagenServicioImpl.eliminarImagen(imagenId);
 			return ResponseEntity.ok("Imagen eliminada correctamente");
@@ -126,10 +136,16 @@ public class PublicacionControlador {
 		}
 	}
 
-	@Operation(summary = "Actualizar imagen", description = "permite a los usuarios registrados con rol 'ADMIN' actualizar imágenes de publicaciones existentes")
+	@Operation(summary = "Actualizar imagen", description = "Permite a los usuarios registrados con rol 'ADMIN' actualizar imágenes de publicaciones existentes")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Imagen editada", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Imagen.class))),
+			@ApiResponse(responseCode = "404", description = "No se encontró ninguna imagen con el ID indicado", content = @Content(mediaType = "text/plain"))
+	})
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/actualizarImagen/{imagenId}")
-	public ResponseEntity<?> actualizarImagen(@PathVariable Long imagenId, @RequestParam("file") MultipartFile file) {
+	public ResponseEntity<?> actualizarImagen(
+			@Parameter(description = "ID de la imagen a editar", example = "1") @PathVariable Long imagenId,
+			@RequestParam("file") MultipartFile file) {
 		try {
 			// Llamar al servicio para actualizar la imagen
 			Imagen imagenActualizada = imagenServicioImpl.actualizarImagen(imagenId, file);
