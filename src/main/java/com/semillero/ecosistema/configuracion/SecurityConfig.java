@@ -31,9 +31,10 @@ public class SecurityConfig {
  //                       .requestMatchers("/buscarPorId/**").hasAnyRole("USUARIO","ADMIN")
                         .requestMatchers("/buscarPorCategoria/**", "/mostrarProveedorActivo","/mostrarTodo","/buscarPorId/**", "/proveedoresCercanos").permitAll()
                         .requestMatchers("/categorias/**", "/ubicacion/**","incrementarVisualizaciones/**").permitAll()
+                        .requestMatchers("/swagger-ui/**","/v3/api-docs/**").permitAll()
 
                         .requestMatchers("/error").anonymous() // Permitir acceso anónimo a /error
-                        .anyRequest().authenticated() // Asegura que todas las demás solicitudes estén autenticadas
+                        .anyRequest().permitAll() // Asegura que todas las demás solicitudes estén autenticadas
                 )
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
