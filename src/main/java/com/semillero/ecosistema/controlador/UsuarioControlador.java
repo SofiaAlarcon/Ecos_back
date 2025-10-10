@@ -33,7 +33,7 @@ public class UsuarioControlador {
 		@ApiResponse(responseCode = "200", description = "Operación exitosa", content = @Content),
 		@ApiResponse(responseCode = "404", description = "Not found. No se encontró usuario con el ID proporcionado", content = @Content)
 	})
-	@PutMapping("/desactivar/{id}")
+	@PutMapping("/{id}")
 	public ResponseEntity<String> desactivarUsuario(@Parameter(description = "ID del usuario a desactivar", example = "1")@PathVariable Long id){
 		boolean desactivado = usuarioServicioImpl.desactivarUsuario(id);
 

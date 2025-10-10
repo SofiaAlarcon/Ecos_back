@@ -12,9 +12,9 @@ public class SwaggerConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Mi API Spring Boot")
+                        .title("Ecosistema")
                         .version("1.0")
-                        .description("Documentación generada con Swagger/OpenAPI")
+                        .description("Esta API permite gestionar la autenticación de usuarios, así como también distintas operaciones relacionadas a proveedores y publicaciones.")
                 );
     }
 }

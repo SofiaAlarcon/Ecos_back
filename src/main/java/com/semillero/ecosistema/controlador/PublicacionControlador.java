@@ -58,7 +58,7 @@ public class PublicacionControlador {
 		@ApiResponse(responseCode = "404", description = "Not found. No se encontró ningún usuario con el ID indicado", content = @Content)
 	})
 	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping(value = "/publicar/{userId}", consumes = "multipart/form-data")
+	@PostMapping(value = "/publicacion/{userId}", consumes = "multipart/form-data")
 	public ResponseEntity<String> crearPublicacion(
 			@Parameter(description = "ID del usuario que creará la publicación", example = "1") @PathVariable Long userId,
 			@Valid @ModelAttribute PublicacionDto publicacionDto, @RequestPart("imagen") List<MultipartFile> files)
@@ -100,13 +100,13 @@ public class PublicacionControlador {
 				.body("No se encontró ningún usuario con el id proporcionado o con los permisos requeridos");
 	}
 
-	@Operation(summary = "Publicar", description = "Permite a los usuarios registrados con rol 'ADMIN' editar publicaciones existentes")
+	@Operation(summary = "Editar publicación", description = "Permite a los usuarios registrados con rol 'ADMIN' editen sus publicaciones")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "204", description = "Operación exitosa", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Publicacion.class))),
 			@ApiResponse(responseCode = "404", description = "Not found. No se encontró ninguna publicación con el ID indicado", content = @Content)
 	})
 	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping(value = "/editar-publicacion/publicacion/{publicacionId}", consumes = "multipart/form-data")
+	@PutMapping(value = "/publicacion/{publicacionId}", consumes = "multipart/form-data")
 	public ResponseEntity<?> editarPublicacion(
 			@Parameter(description = "ID de la publicación a editar", example = "1") @PathVariable Long publicacionId,
 			@ModelAttribute PublicacionDto publicacionEditada) {
@@ -119,7 +119,7 @@ public class PublicacionControlador {
 		}
 	}
 
-	@Operation(summary = "Eliminar imagen", description = "Permite a los usuarios registrados con rol 'ADMIN' eliminar imágenes de publicaciones existentes")
+	@Operation(summary = "Eliminar imagen", description = "Permite a los usuarios registrados con rol 'ADMIN' eliminar imágenes de sus publicaciones")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "204", description = "Operación exitosa", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Not. found. No se encontró ninguna imagen con el ID indicado", content = @Content)
@@ -142,7 +142,7 @@ public class PublicacionControlador {
 			@ApiResponse(responseCode = "404", description = "Not found. No se encontró ninguna imagen con el ID indicado", content = @Content(mediaType = "text/plain"))
 	})
 	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping("/actualizarImagen/{imagenId}")
+	@PutMapping(value ="/actualizarImagen/{imagenId}")
 	public ResponseEntity<?> actualizarImagen(
 			@Parameter(description = "ID de la imagen a editar", example = "1") @PathVariable Long imagenId,
 			@RequestParam("file") MultipartFile file) {
@@ -161,7 +161,7 @@ public class PublicacionControlador {
 			@ApiResponse(responseCode = "404", description = "Not found. No se encontró la publicación indicada")
 	})
 	@PreAuthorize("hasRole('ADMIN')")
-	@DeleteMapping(value = "/borrar-publicacion/{id}")
+	@DeleteMapping(value = "/publicacion/{id}")
 	public ResponseEntity<String> borrarPublicacion(
 			@Parameter(description = "ID de la publicación a borrar", example = "1") @PathVariable Long id) {
 		boolean success = publicacionServicioImpl.borrarPublicacion(id);
@@ -174,7 +174,7 @@ public class PublicacionControlador {
 		}
 	}
 
-	@Operation(summary = "Obtener publicaciones", description = "Permite a los usuarios registrados con rol 'ADMIN' obtener una lista con todas las publicaciones, tanto las activas como las que han sido borradas")
+	@Operation(summary = "Obtener todas las publicaciones", description = "Permite a los usuarios registrados con rol 'ADMIN' obtener una lista con todas las publicaciones, tanto las activas como las que han sido borradas")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Operación exitosa", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Publicacion.class)))),
 			@ApiResponse(responseCode = "403", description = "Acceso denegado. El usuario debe tener rol 'ADMIN'", content = @Content)
@@ -202,7 +202,7 @@ public class PublicacionControlador {
 			@ApiResponse(responseCode = "200", description = "Devuelve la publicación correspondiente al ID brindado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Publicacion.class))),
 			@ApiResponse(responseCode = "404", description = "No se encontró la publicación indicada", content = @Content)
 	})
-	@GetMapping(value = "buscar/{idPublicacion}")
+	@GetMapping(value = "publicacion/{idPublicacion}")
 	public ResponseEntity<?> buscarPorId(
 			@Parameter(description = "ID de la publicación a buscar", example = "1") @PathVariable Long idPublicacion) {
 		Optional<Publicacion> publicacion = publicacionServicioImpl.buscarPublicacionPorId(idPublicacion);
@@ -220,7 +220,7 @@ public class PublicacionControlador {
 			@ApiResponse(responseCode = "200", description = "Incrementa las visualizaciones de la publicación indicada", content = @Content),
 			@ApiResponse(responseCode = "404", description = "No se encontró la publicación indicada", content = @Content)
 	})
-	@GetMapping(value = "incrementarVisualizaciones/{idPublicacion}")
+	@GetMapping(value = "visualizaciones/{idPublicacion}")
 	public ResponseEntity<?> incrementarVisualizaciones(
 			@Parameter(description = "ID de la publicación", example = "1") @PathVariable Long idPublicacion) {
 		Optional<Publicacion> publicacion = publicacionServicioImpl.buscarPublicacionPorId(idPublicacion);
@@ -240,7 +240,7 @@ public class PublicacionControlador {
 			@ApiResponse(responseCode = "404", description = "No se encontró la publicación indicada", content = @Content)
 	})
 	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping("/cambiar-estado/{id}")
+	@PutMapping(value = "/cambiar-estado/{id}")
 	public ResponseEntity<String> cambiarEstado(
 			@Parameter(description = "ID de la publicación", example = "1") @PathVariable Long id) {
 		boolean success = publicacionServicioImpl.cambiarEstado(id);

@@ -184,7 +184,7 @@ public class ProveedorControlador {
         }
     }
 
-	@Operation(summary = "Buscar proveedores", description = "Devuelve una lista de proveedores a partir de un nombre")
+	@Operation(summary = "Obtener proveedores por nombre", description = "Devuelve una lista de proveedores a partir de un nombre")
 	@Parameter(name = "query", description = "Nombre del proveedor a buscar", required = true, example = "Juan Lopez")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "Operación exitosa", content = @Content(
@@ -204,7 +204,7 @@ public class ProveedorControlador {
 		}
 	}
 	
-	@Operation(summary = "Mostrar todo", description = "Devuelve una lista de todos los proveedores")
+	@Operation(summary = "Obtener todos", description = "Devuelve una lista de todos los proveedores")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "Operación exitosa", content = @Content(
 			mediaType = "application/json",
@@ -212,12 +212,12 @@ public class ProveedorControlador {
 		)),
 		@ApiResponse(responseCode = "204", description = "Not found. No se encontraron proveedores registrados", content = @Content)
 	})
-	@GetMapping("/provedores")
+	@GetMapping("/proveedores")
 	public ResponseEntity<List<Proveedor>>mostrarTodo(){
 		return ResponseEntity.ok(proveedorServicio.mostrarTodo());
 	}
 
-	@Operation(summary = "Buscar por ID", description = "Devuelve una lista de proveedores a partir de un ID")
+	@Operation(summary = "Obtener proveedor por ID", description = "Devuelve una lista de proveedores a partir de un ID")
 	@Parameter(name = "proveedorId", description = "ID del proveedor a buscar", required = true, example = "1")
 	@ApiResponses( value = {
 		@ApiResponse(responseCode = "200", description = "Operación exitosa", content = @Content(
@@ -232,8 +232,8 @@ public class ProveedorControlador {
 		return ResponseEntity.ok(proveedorServicio.buscarProveedorPorId(proveedorId));
 	}
 	
-	@Operation(summary = "Buscar por categoría", description = "Devuelve una lista de proveedores a partir de una categoría")
-	@Parameter(name = "categoriaId", description = "ID de la categoría de la cual se quieren buscar los proveedores", required = true, example = "Gastronomía")
+	@Operation(summary = "Obtener proveedores por categoría", description = "Devuelve una lista de proveedores a partir de una categoría")
+	@Parameter(name = "categoriaId", description = "ID de la categoría de la cual se quieren buscar los proveedores", required = true, example = "1")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "Operación exitosa", content = @Content(
 			mediaType = "application/json",
@@ -246,7 +246,7 @@ public class ProveedorControlador {
 		return ResponseEntity.ok(proveedorServicio.buscarPorCategoriaId(categoriaId));
 	}
 	
-	@Operation(summary = "Mostrar activos", description = "Devuelve una lista de proveedores activos")
+	@Operation(summary = "Obtener proveedores activos", description = "Devuelve una lista de proveedores activos")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "Operación exitosa", content = @Content(
 			mediaType = "application/json",
@@ -260,7 +260,7 @@ public class ProveedorControlador {
 	}
 	
 
-	@Operation(summary = "Proveedor nuevo", description = "Muestra al usuario ADMIN una lista de los proveedores postulados")
+	@Operation(summary = "Obtener proveedores nuevos", description = "Muestra al usuario ADMIN una lista de los nuevos proveedores postulados")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "Operación exitosa", content = @Content(
 			mediaType = "application/json",
@@ -299,7 +299,7 @@ public class ProveedorControlador {
 		return ResponseEntity.ok(nuevoEstado);
 	}
 	
-	@Operation(summary = "Mis estados", description = "Permite que el usuario registrado vea una lista con el estado de sus proveedores")
+	@Operation(summary = "Obtener mis estados", description = "Permite que el usuario registrado vea una lista con el estado de sus proveedores")
 	@Parameter(name = "usuarioId", description = "ID del usuario que quiere ver el estado de sus proveedores", required = true, example = "1")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "Operación exitosa", content = @Content(
@@ -320,7 +320,7 @@ public class ProveedorControlador {
 		
 	}
 	
-	@Operation(summary = "Proveedores cercanos", description = "Permite que cualquier usuario pueda ver una lista de los proveedores cercanos a su ubicación actual")
+	@Operation(summary = "Obtener proveedores cercanos", description = "Permite que el usuario pueda ver una lista de los proveedores cercanos a su ubicación actual")
 	@Parameters({
 		@Parameter(name = "lat", description = "Valor correspondiente a la latitud del usuario", required = false, example = "32.2"),
 		@Parameter(name = "lng", description = "Valor correspondiente a la longitud del usuario", required = false, example = "58.8")

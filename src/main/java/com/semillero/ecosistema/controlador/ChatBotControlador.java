@@ -38,7 +38,7 @@ public class ChatBotControlador {
 	@Autowired
 	private ChatBotServicio chatBotServicio;
 	
-	@Operation(summary = "Pregunta", description = "Muestra la respuesta correspondiente a la pregunta seleccionada por el usuario")
+	@Operation(summary = "Obtener pregunta", description = "Muestra la respuesta correspondiente a la pregunta seleccionada por el usuario")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "Operación exitosa", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Respuesta.class))),
 		@ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
@@ -49,14 +49,14 @@ public class ChatBotControlador {
 		return ResponseEntity.ok(respuesta);
 	}
 	
-	@Operation(summary = "Preguntar", description = "Permite que usuarios autenticados con rol 'USUARIO' envíen preguntas")
+	@Operation(summary = "Enviar pregunta", description = "Permite que usuarios autenticados con rol 'USUARIO' envíen preguntas")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "Operación exitosa", content = @Content(mediaType ="application/json", schema = @Schema(type = "string"))),
 		@ApiResponse(responseCode = "404", description = "Not found. No se encontró ningún usuario con el ID indicado", content = @Content),
 		@ApiResponse(responseCode = "403", description = "Unauthorized. El usuario no cuenta con los permisos requeridos para enviar una pregunta", content = @Content)
 	})
 	@PreAuthorize("hasRole('USUARIO')")
-	@PostMapping(value="/preguntar/usuario/{usuarioId}")
+	@PostMapping(value="/pregunta/usuario/{usuarioId}")
 	public ResponseEntity<String> enviarPregunta(@Parameter(description = "ID del usuario", example = "1")
 	@PathVariable Long usuarioId,
 	@io.swagger.v3.oas.annotations.parameters.RequestBody(

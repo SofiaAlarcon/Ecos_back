@@ -35,7 +35,7 @@ public class DashboardControlador {
 		@ApiResponse(responseCode = "200", description = "Operación exitosa", content = @Content(mediaType = "application/json", schema = @Schema(type = "object", example = "{\"aceptados\":12,\"enRevision\":4,\"denegados\":6,\"total\":22}"))),
 		@ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
 	})
-	@GetMapping("/estadisticasProveedores")
+	@GetMapping(value = "/estadisticasProveedores")
 	public Map<String, Long> obtenerEstadisticasProveedores() {
 		Map<String, Long> estadisticas = new HashMap<>();
 		estadisticas.put("aceptados", dashboardServicio.proveedoresAceptados());
@@ -51,7 +51,7 @@ public class DashboardControlador {
 		@ApiResponse(responseCode = "200", description = "Operación exitosa", content = @Content(mediaType = "application/json", schema = @Schema(type = "oject", example = "{\"Gastronomía\":8,\"Cosmética\":2,\"Hogar y Jardín\":6,\"total\":16}"))),
 		@ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
 	})
-	@GetMapping("/proveedoresPorCategoria")
+	@GetMapping(value = "/proveedoresPorCategoria")
 	public Map<String, Long> obtenerEstadisticasPorCategoria() {
 		Map<String, Long> estadisticas = new HashMap<>();
 		List<Categoria> categorias = categoriaRepositorio.findAll();
@@ -71,7 +71,7 @@ public class DashboardControlador {
 		@ApiResponse(responseCode = "200", description = "operación exitosa", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(type = "object", example = "{\"id\": 1, \"titulo\": \"Publicación de prueba\", \"fechaDeCreacion\": \"2025-05-15\", \"visualizaciones\": 33}")))),
 		@ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
 	})
-	@GetMapping("/visualizaciones")
+	@GetMapping(value = "/visualizaciones")
 	public List<Map<String, Object>> obtenerDetallesDeTodas() {
 		return dashboardServicio.obtenerDetallesDeTodasLasPublicaciones();
 	}

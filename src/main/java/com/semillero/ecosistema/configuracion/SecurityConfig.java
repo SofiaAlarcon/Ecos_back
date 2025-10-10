@@ -34,7 +34,7 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui/**","/v3/api-docs/**").permitAll()
 
                         .requestMatchers("/error").anonymous() // Permitir acceso anónimo a /error
-                        .anyRequest().authenticated() // Asegura que todas las demás solicitudes estén autenticadas
+                        .anyRequest().permitAll() // Asegura que todas las demás solicitudes estén autenticadas
                 )
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
